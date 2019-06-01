@@ -1,28 +1,11 @@
-#!/usr/bin/env python3
 '''
-plot_melbourne_temperature_humidity.py
-
-This script reads in weather data from the Bureau of Meterology (BOM) in JSON
-format from this URL:
-
-    http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json
-
-which contains the latest observations from Melbourne (Olympic Park). The
-script downloads this file.
-
-Currently it makes a plot of temperature and humidity from all the most recent
-data.
-
-Module requirements:
-- matplotlib
-- pandas
-
-D. Mentiplay, 2018.
+Observations puts Bureau of Meteorology station data into a pandas
+DataFrame.
 '''
 
 import json
 import pathlib
-import urllib.request
+import urllib
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -34,6 +17,15 @@ _TMP_FILE = pathlib.Path('~/Downloads').expanduser() / 'tmp.json'
 
 
 class Observations:
+    """
+    Observations puts Bureau of Meteorology station data into a pandas
+    DataFrame.
+
+    Parameters
+    ----------
+    url : str
+        The URL of the JSON data.
+    """
     def __init__(self, url):
 
         with urllib.request.urlopen(url) as response, open(
@@ -60,7 +52,17 @@ class Observations:
 
         self.observations = pd.DataFrame(observations)
 
-    def plot_temperature_humidity1(self):
+    def plot_temperature_humidity(self, version=None):
+        if version is None:
+            version = 2
+        if version == 1:
+            self._plot_temperature_humidity1()
+        elif version == 2:
+            self._plot_temperature_humidity2()
+        else:
+            raise ValueError('version must be "1" or "2"')
+
+    def _plot_temperature_humidity1(self):
 
         fig, axes = plt.subplots(ncols=1, nrows=2, sharex=True)
         self.observations.plot(
@@ -75,7 +77,7 @@ class Observations:
         axes[1].set_ylabel('Relative humidity [%]')
         [ax.grid(linestyle='--') for ax in axes]
 
-    def plot_temperature_humidity2(self):
+    def _plot_temperature_humidity2(self):
 
         fig, ax1 = plt.subplots(figsize=(10, 5))
         fig.autofmt_xdate()
@@ -105,10 +107,3 @@ class Observations:
         lns = ln1 + ln2
         labs = [l.get_label() for l in lns]
         ax1.legend(lns, labs, loc=0)
-
-
-if __name__ == '__main__':
-
-    melb = Observations(MELBOURNE_OLYMPIC_PARK_URL)
-    melb.plot_temperature_humidity2()
-    plt.show()
