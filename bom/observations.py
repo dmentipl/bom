@@ -38,6 +38,7 @@ class Observations:
 
             with open(_TMP_FILE) as data_file:
                 data = json.load(data_file)
+            pathlib.Path(_TMP_FILE).unlink()
 
             obs_data = data['observations']['data']
 
@@ -145,8 +146,11 @@ def _read_axf(filename):
             value = line.split('=')[-1].strip('"')
             non_csv_data[section][key] = value
 
-    data = pd.read_csv(filename, names=columns, skiprows=csv_start, comment='[')
     header = non_csv_data['header']
     notice = non_csv_data['notice']
+
+    data = pd.read_csv(filename, names=columns, skiprows=csv_start, comment='[')
+
+    pathlib.Path(_TMP_FILE).unlink()
 
     return notice, header, data
