@@ -22,6 +22,16 @@ class Observations:
     ----------
     url : str
         The URL of the data. File format can be JSON or AXF.
+
+    Examples
+    --------
+    Plot Melbourne (Olympic Park) temperature and humidity from the
+    last 72 hours.
+
+    >>> melb = bom.Observations(
+            'http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json'
+        )
+    >>> melb.plot_temperature_humidity()
     """
 
     def __init__(self, url):
