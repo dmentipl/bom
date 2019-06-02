@@ -32,6 +32,6 @@ Melbourne (Olympic Park) temperature and humidity from the last 72 hours:
 To find the URL, for example, Google "Latest Weather Observations for Melbourne
 (Olympic Park)", follow the first link (probably), and then go to the bottom of
 the page looking for a section "Other formats". There should be links to both
-.axf and .json files. Either of these work with this package.
+.axf and .json files. You need to replace the "www" in the URL with "reg".
 
 See the examples directory for more examples.
