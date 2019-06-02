@@ -19,12 +19,18 @@ class Observations:
 
     Examples
     --------
-    Plot Melbourne (Olympic Park) temperature and humidity from the
-    last 72 hours.
+    Get Melbourne (Olympic Park) data from the last 72 hours.
 
     >>> url = 'http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json'
     >>> melb = bom.Observations(url)
+
+    Plot temperature and humidity.
+
     >>> melb.plot_temperature_humidity()
+
+    Plot dew point.
+
+    >>> melb.plot_dew_point()
     """
 
     def __init__(self, url):
@@ -78,6 +84,28 @@ class Observations:
     def data(self):
         """Meteorological data as Pandas DataFrame."""
         return self._data
+
+    def _plot_two_quantities(self, quantity1, quantity2):
+        """Plot two quantities against time, assuming same units."""
+
+        if quantity1 not in self.data.columns:
+            raise ValueError(f'{quantity1} not available')
+        if quantity2 not in self.data.columns:
+            raise ValueError(f'{quantity2} not available')
+
+        fig, axes = plt.subplots(ncols=1, nrows=1)
+        self.data[::-1].plot('local_date_time', quantity1, ax=axes)
+        self.data[::-1].plot('local_date_time', quantity2, ax=axes)
+        fig.autofmt_xdate()
+        axes.set_xlabel('Date time')
+        axes.grid(linestyle='--')
+
+        return axes
+
+    def plot_dew_point(self):
+        """Plot dew point and air temperature against time."""
+        axes = self._plot_two_quantities('air_temp', 'dewpt')
+        axes.set_ylabel('Temperature [°C]')
 
     def plot_temperature_humidity(self, version=None):
         """
