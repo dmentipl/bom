@@ -13,6 +13,12 @@ directory, type
 conda develop .
 ```
 
+Or use pip to achieve the same result:
+
+```
+pip install -e .
+```
+
 Then you should be able to `import bom`.
 
 Use
@@ -29,9 +35,13 @@ Melbourne (Olympic Park) temperature and humidity from the last 72 hours:
 >>> melb.plot_temperature_humidity()
 ```
 
+### Other datasets
+
 To find the URL, for example, Google "Latest Weather Observations for Melbourne
 (Olympic Park)", follow the first link (probably), and then go to the bottom of
 the page looking for a section "Other formats". There should be links to both
 .axf and .json files. You need to replace the "www" in the URL with "reg".
+
+### Examples
 
 See the examples directory for more examples.
