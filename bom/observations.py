@@ -1,8 +1,3 @@
-'''
-Observations puts Bureau of Meteorology station data into a pandas
-DataFrame.
-'''
-
 import json
 import pathlib
 import urllib
@@ -15,8 +10,7 @@ _TMP_FILE = pathlib.Path('~/Downloads').expanduser() / '.tmp'
 
 class Observations:
     """
-    Observations puts Bureau of Meteorology station data into a pandas
-    DataFrame.
+    Observations contains Bureau of Meteorology 72 hour station data.
 
     Parameters
     ----------
@@ -28,9 +22,8 @@ class Observations:
     Plot Melbourne (Olympic Park) temperature and humidity from the
     last 72 hours.
 
-    >>> melb = bom.Observations(
-            'http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json'
-        )
+    >>> url = 'http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json'
+    >>> melb = bom.Observations(url)
     >>> melb.plot_temperature_humidity()
     """
 
@@ -60,18 +53,42 @@ class Observations:
             for key in observations.keys():
                 observations[key]
 
-            self.notice = data['observations']['notice'][0]
-            self.header = data['observations']['header'][0]
-            self.data = pd.DataFrame(observations)
+            self._notice = data['observations']['notice'][0]
+            self._header = data['observations']['header'][0]
+            self._data = pd.DataFrame(observations)
 
         elif file_format == 'axf':
 
             notice, header, data = _read_axf(_TMP_FILE)
-            self.notice = notice
-            self.header = header
-            self.data = data
+            self._notice = notice
+            self._header = header
+            self._data = data
+
+    @property
+    def notice(self):
+        """Copyright notice from the Bureau of Meteorology."""
+        return self._notice
+
+    @property
+    def header(self):
+        """Header containing station data."""
+        return self._header
+
+    @property
+    def data(self):
+        """Meteorological data as Pandas DataFrame."""
+        return self._data
 
     def plot_temperature_humidity(self, version=None):
+        """
+        Plot temperature and relative humidity.
+
+        Parameters
+        ----------
+        version : int
+            There are two versions of this plot. One (1) with separate
+            axes, and the other (2) with both lines on the same axis.
+        """
         if version is None:
             version = 2
         if version == 1:

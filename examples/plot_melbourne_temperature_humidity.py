@@ -1,14 +1,16 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
-This script reads in weather data from the Bureau of Meterology (BOM) in
-JSON or AXF format from these URLs:
+This script reads in meteorological data from the Bureau of Meterology
+in JSON or AXF format.
+
+The default data contains the latest observations from Melbourne
+(Olympic Park) from these URLs:
 
     http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.json
     http://reg.bom.gov.au/fwo/IDV60901/IDV60901.95936.axf
 
-which contains the latest observations from Melbourne (Olympic Park).
-The script downloads this file. Currently it makes a plot of temperature
-and humidity from all the most recent data.
+The script downloads the data file, then makes a plot of temperature and
+humidity.
 """
 
 import bom
